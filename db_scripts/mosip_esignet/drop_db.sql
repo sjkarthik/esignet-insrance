@@ -1,2 +1,2 @@
-DROP DATABASE IF EXISTS mosip_esignet_insurance;
+DROP DATABASE IF EXISTS mosip_esignet;
 

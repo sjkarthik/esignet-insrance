@@ -1,17 +1,17 @@
-\c mosip_esignet_insurance
+\c mosip_esignet
 
 GRANT CONNECT
-   ON DATABASE mosip_esignet_insurance
-   TO esignetinsuranceuser;
+   ON DATABASE mosip_esignet
+   TO esignetuser;
 
 GRANT USAGE
    ON SCHEMA esignet
-   TO esignetinsuranceuser;
+   TO esignetuser;
 
 GRANT SELECT,INSERT,UPDATE,DELETE,TRUNCATE,REFERENCES
    ON ALL TABLES IN SCHEMA esignet
-   TO esignetinsuranceuser;
+   TO esignetuser;
 
 ALTER DEFAULT PRIVILEGES IN SCHEMA esignet
-	GRANT SELECT,INSERT,UPDATE,DELETE,REFERENCES ON TABLES TO esignetinsuranceuser;
+	GRANT SELECT,INSERT,UPDATE,DELETE,REFERENCES ON TABLES TO esignetuser;
 

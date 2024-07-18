@@ -1,4 +1,4 @@
-CREATE DATABASE mosip_esignet_insurance
+CREATE DATABASE mosip_esignet
 	ENCODING = 'UTF8' 
 	LC_COLLATE = 'en_US.UTF-8' 
 	LC_CTYPE = 'en_US.UTF-8' 
@@ -8,7 +8,7 @@ CREATE DATABASE mosip_esignet_insurance
 
 COMMENT ON DATABASE mosip_idp IS 'e-Signet related data is stored in this database';
 
-\c mosip_esignet_insurance postgres
+\c mosip_esignet postgres
 
 DROP SCHEMA IF EXISTS esignet CASCADE;
 CREATE SCHEMA esignet;

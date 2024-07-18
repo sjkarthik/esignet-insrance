@@ -1,4 +1,4 @@
-\c mosip_esignet_insurance
+\c mosip_esignet
 
 \ir ddl/esignet-client_detail.sql
 \ir ddl/esignet-key_alias.sql
