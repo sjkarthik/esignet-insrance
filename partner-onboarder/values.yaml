@@ -13,10 +13,10 @@ onboarding:
     - name: digitalcard
       enabled: false
     - name: esignet
-      enabled: true
+      enabled: false
     - name: resident-oidc
       enabled: true
     - name: demo-oidc
       enabled: false
     - name: mimoto-keybinding
-      enabled: false
+      enabled: true

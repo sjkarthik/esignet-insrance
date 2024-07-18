@@ -4,7 +4,7 @@
 function copying_secrets() {
   COPY_UTIL=../esignet/copy_cm_func.sh
   #DST_NS=esignet
-  $COPY_UTIL secret esignet-captcha esignet config-server
+  $COPY_UTIL secret esignet-captcha-insurance esignet-insurance config-server
   return 0
 }
 # set commands for error handling.

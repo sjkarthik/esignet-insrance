@@ -14,8 +14,7 @@ function installing_All() {
   helm repo add mosip https://mosip.github.io/mosip-helm
   helm repo update
 
-  declare -a module=("redis"
-                     "esignet"
+  declare -a module=("esignet"
                  "oidc-ui"
                      )
 

@@ -1,4 +1,4 @@
-CREATE ROLE esignetuser WITH
+CREATE ROLE esignetinsuranceuser WITH
 	INHERIT
 	LOGIN
 	PASSWORD :dbuserpwd;

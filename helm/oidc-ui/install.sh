@@ -6,7 +6,7 @@ if [ $# -ge 1 ] ; then
   export KUBECONFIG=$1
 fi
 
-NS=esignet
+NS=esignet-insurance
 CHART_VERSION=1.3.0
 
 echo Create $NS namespace
@@ -22,10 +22,10 @@ function installing_oidc-ui() {
   echo Copy configmaps
   ./copy_cm.sh
 
-  ESIGNET_HOST=$(kubectl get cm global -o jsonpath={.data.mosip-esignet-host})
+  ESIGNET_HOST=$(kubectl get cm global -o jsonpath={.data.mosip-esignet-insurance-host})
 
   echo Installing OIDC UI
-  helm -n $NS install oidc-ui mosip/oidc-ui \
+  helm -n $NS install oidc-ui-insurance mosip/oidc-ui \
   --set istio.hosts\[0\]=$ESIGNET_HOST \
   -f values.yaml \
   --version $CHART_VERSION

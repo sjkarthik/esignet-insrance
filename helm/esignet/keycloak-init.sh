@@ -6,7 +6,7 @@ if [ $# -ge 1 ] ; then
   export KUBECONFIG=$1
 fi
 
-NS=esignet
+NS=esignet-insurance
 CHART_VERSION=12.0.1
 COPY_UTIL=../copy_cm_func.sh
 

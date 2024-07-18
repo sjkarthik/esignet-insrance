@@ -12,10 +12,10 @@ SOFTHSM_CHART_VERSION=12.0.1-B2
 echo Create $SOFTHSM_NS namespace
 kubectl create ns $SOFTHSM_NS
 
-NS=esignet
+NS=esignet-insurance
 CHART_VERSION=1.3.0
 
-ESIGNET_HOST=$(kubectl get cm global -o jsonpath={.data.mosip-esignet-host})
+ESIGNET_HOST=$(kubectl get cm global -o jsonpath={.data.mosip-esignet-insurance-host})
 
 echo Create $NS namespace
 kubectl create ns $NS
@@ -27,18 +27,18 @@ function installing_esignet() {
   helm repo add mosip https://mosip.github.io/mosip-helm
   helm repo update
 
-  echo Installing Softhsm for esignet
-  helm -n $SOFTHSM_NS install softhsm-esignet mosip/softhsm -f softhsm-values.yaml --version $SOFTHSM_CHART_VERSION --wait
-  echo Installed Softhsm for esignet
+  echo Installing Softhsm for esignet-insurance
+  helm -n $SOFTHSM_NS install softhsm-esignet-insurance mosip/softhsm -f softhsm-values.yaml --version $SOFTHSM_CHART_VERSION --wait
+  echo Installed Softhsm for esignet-insurance
 
   echo Copy configmaps
   ./copy_cm_func.sh configmap global default config-server
 
   echo Copy secrets
-  ./copy_cm_func.sh secret softhsm-esignet softhsm config-server
+  ./copy_cm_func.sh secret softhsm-esignet-insurance softhsm config-server
 
-  kubectl -n config-server set env --keys=mosip-esignet-host --from configmap/global deployment/config-server --prefix=SPRING_CLOUD_CONFIG_SERVER_OVERRIDES_
-  kubectl -n config-server set env --keys=security-pin --from secret/softhsm-esignet deployment/config-server --prefix=SPRING_CLOUD_CONFIG_SERVER_OVERRIDES_SOFTHSM_ESIGNET_
+  kubectl -n config-server set env --keys=mosip-esignet-insurance-host --from configmap/global deployment/config-server --prefix=SPRING_CLOUD_CONFIG_SERVER_OVERRIDES_
+  kubectl -n config-server set env --keys=security-pin --from secret/softhsm-esignet-insurance deployment/config-server --prefix=SPRING_CLOUD_CONFIG_SERVER_OVERRIDES_SOFTHSM_ESIGNET_MOSIPID
   kubectl -n config-server rollout restart deploy config-server
   kubectl -n config-server get deploy -o name |  xargs -n1 -t  kubectl -n config-server rollout status
 
@@ -50,12 +50,12 @@ function installing_esignet() {
   read ESECRET_KEY
 
   echo Setting up captcha secrets
-  kubectl -n $NS create secret generic esignet-captcha --from-literal=esignet-captcha-site-key=$ESITE_KEY --from-literal=esignet-captcha-secret-key=$ESECRET_KEY --dry-run=client -o yaml | kubectl apply -f -
+  kubectl -n $NS create secret generic esignet-captcha-insurance --from-literal=esignet-captcha-insurance-site-key=$ESITE_KEY --from-literal=esignet-captcha-insurance-secret-key=$ESECRET_KEY --dry-run=client -o yaml | kubectl apply -f -
 
   echo Setting up dummy values for esignet misp license key
-  kubectl create secret generic esignet-misp-onboarder-key -n $NS --from-literal=mosip-esignet-misp-key='' --dry-run=client -o yaml | kubectl apply -f -
+  kubectl create secret generic esignet-misp-onboarder-insurance-key -n $NS --from-literal=mosip-esignet-insurance-misp-key='' --dry-run=client -o yaml | kubectl apply -f -
 
-  ./copy_cm_func.sh secret esignet-misp-onboarder-key esignet config-server
+  ./copy_cm_func.sh secret esignet-misp-onboarder-insurance-key esignet-insurance config-server
 
   echo Copy configmaps
   ./copy_cm.sh
@@ -63,9 +63,9 @@ function installing_esignet() {
   echo copy secrets
   ./copy_secrets.sh
 
-  kubectl -n config-server set env --keys=esignet-captcha-site-key --from secret/esignet-captcha deployment/config-server --prefix=SPRING_CLOUD_CONFIG_SERVER_OVERRIDES_
-  kubectl -n config-server set env --keys=esignet-captcha-secret-key --from secret/esignet-captcha deployment/config-server --prefix=SPRING_CLOUD_CONFIG_SERVER_OVERRIDES_
-  kubectl -n config-server set env --keys=mosip-esignet-misp-key --from secret/esignet-misp-onboarder-key deployment/config-server --prefix=SPRING_CLOUD_CONFIG_SERVER_OVERRIDES_
+  kubectl -n config-server set env --keys=esignet-captcha-insurance-site-key --from secret/esignet-captcha-insurance deployment/config-server --prefix=SPRING_CLOUD_CONFIG_SERVER_OVERRIDES_
+  kubectl -n config-server set env --keys=esignet-captcha-insurance-secret-key --from secret/esignet-captcha-insurance deployment/config-server --prefix=SPRING_CLOUD_CONFIG_SERVER_OVERRIDES_
+  kubectl -n config-server set env --keys=mosip-esignet-insurance-misp-key --from secret/esignet-misp-onboarder-insurance-key deployment/config-server --prefix=SPRING_CLOUD_CONFIG_SERVER_OVERRIDES_
 
   kubectl -n config-server get deploy -o name |  xargs -n1 -t  kubectl -n config-server rollout status
 
@@ -84,7 +84,7 @@ function installing_esignet() {
   fi
 
   echo Installing esignet
-  helm -n $NS install esignet mosip/esignet --version $CHART_VERSION $ENABLE_INSECURE
+  helm -n $NS install esignet-insurance mosip/esignet --set image.repository=mosipdev/esignet --set image.tag=ES-496  --version $CHART_VERSION $ENABLE_INSECURE
 
   kubectl -n $NS  get deploy -o name |  xargs -n1 -t  kubectl -n $NS rollout status
 
@@ -99,3 +99,4 @@ set -o nounset   ## set -u : exit the script if you try to use an uninitialised 
 set -o errtrace  # trace ERR through 'time command' and other functions
 set -o pipefail  # trace ERR through pipes
 installing_esignet   # calling function
+

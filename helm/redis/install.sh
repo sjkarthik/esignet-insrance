@@ -6,7 +6,7 @@ if [ $# -ge 1 ] ; then
   export KUBECONFIG=$1
 fi
 
-NS=redis
+NS=redis-insurance
 CHART_VERSION=17.3.14
 
 echo Create $NS namespace
@@ -21,7 +21,7 @@ function installing_redis() {
   helm repo update
 
   echo Installing redis
-  helm -n $NS install redis bitnami/redis --wait --version $CHART_VERSION
+  helm -n $NS install redis-insurance bitnami/redis --wait --version $CHART_VERSION
 
   ../copy_cm_func.sh secret redis redis config-server
 
